@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <head th:replace="layout/layout :: head">
+    <meta charset="UTF-8" />
+    <title>Inicio</title>
+  </head>
+
+  <body>
+    <div class="container-fluid" layout:fragment="page-content">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Citas</h3>
+          <div class="row">
+            <div class="ml-auto">
+              <a th:href="@{/createCita}" class="btn btn-primary"
+                >Registrar cita</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Mascota</th>
+                <th>Dueño</th>
+                <th>Vet.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="cita:${citas}">
+                <td th:text="${cita.id}"></td>
+                <td th:text="${cita.fecha}"></td>
+                <td th:text="${cita.hora}"></td>
+                <td th:text="${cita.mascota_nombre}"></td>
+                <td th:text="${cita.cliente_nombre}"></td>
+                <td th:text="${cita.veterinario_nombre}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

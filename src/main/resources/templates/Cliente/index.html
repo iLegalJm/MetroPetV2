@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <head th:replace="layout/layout :: head">
+    <meta charset="UTF-8" />
+    <title>Inicio</title>
+  </head>
+  <body>
+    <div class="container-fluid" layout:fragment="page-content">
+      <div class="card">
+        <div class="card-header">
+          <h2>Listado de clientes</h2>
+          <a th:href="@{/createCliente}" class="btn btn-primary"
+            >Registrar cliente</a
+          >
+        </div>
+        <div class="card-body">
+          <table class="table table-dark table-striped-columns">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Dni</th>
+                <th>Telefono</th>
+                <th>Direccion</th>
+                <th>F. Registro</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="cliente:${clientes}">
+                <td th:text="${cliente.id}"></td>
+                <td th:text="${cliente.nombres}"></td>
+                <td th:text="${cliente.apellidos}"></td>
+                <td th:text="${cliente.dni}"></td>
+                <td th:text="${cliente.telefono}"></td>
+                <td th:text="${cliente.direccion}"></td>
+                <td th:text="${cliente.fecha_registro}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/layout}"
+>
+  <head th:replace="layout/layout :: head">
+    <meta charset="UTF-8" />
+    <title>Inicio</title>
+  </head>
+  <body>
+    <div class="container-fluid" layout:fragment="page-content">
+      <h2>Nueva mascota</h2>
+
+      <div class="card">
+        <form
+          th:action="@{/saveMascota}"
+          th:object="${mascota}"
+          method="post"
+          class="p-4"
+        >
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Nombres</label>
+              <input
+                th:field="*{nombre}"
+                type="text"
+                class="form-control"
+                placeholder="nombres"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label>Raza</label>
+              <input
+                th:field="*{raza}"
+                type="text"
+                class="form-control"
+                placeholder="raza"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Edad</label>
+              <input
+                th:field="*{edad}"
+                type="number"
+                class="form-control"
+                placeholder="Edad"
+              />
+            </div>
+            <div class="form-group col-md-6">
+              <label>Peso</label>
+              <input
+                th:field="*{peso}"
+                type="number"
+                step="0.01"
+                class="form-control"
+                placeholder="peso"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Clientes</label>
+              <select th:field="*{cliente_id}" class="form-control">
+                <option
+                  th:each="cliente : ${clientes}"
+                  th:value="${cliente.id}"
+                  th:text="${cliente.nombres} + ' ' + ${cliente.apellidos}"
+                ></option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="">&nbsp</label>
+              <div>
+                <button type="submit" class="btn btn-primary w-100">
+                  Registrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
