@@ -76,7 +76,7 @@ public class CitaController {
     @PostMapping("/saveCita")
     public String saveCita(Cita obj) {
         if (dao.insertar(obj)) {
-            return "redirect:/admin";
+            return "redirect:/cita";
         } else {
             return "redirect:/createCita";
         }
