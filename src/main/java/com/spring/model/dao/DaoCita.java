@@ -60,8 +60,8 @@ public class DaoCita implements InterfaceCrud<Cita> {
 
 	@Override
 	public int total() {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql = "select count(*) from cita";
+		return jt.queryForObject(sql, Integer.class);
 	}
 
 	@Override

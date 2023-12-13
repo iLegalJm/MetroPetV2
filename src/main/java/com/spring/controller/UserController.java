@@ -2,10 +2,14 @@ package com.spring.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,12 +46,23 @@ public class UserController {
 
 	@PostMapping("/login")
 	private String login(Model modelo, User obj, RedirectAttributes flash, HttpSession session) {
-		User user = dao.login(obj.getUsuario(), obj.getPassword());
+		User user = dao.login(obj.getUsuario());
 		if (user == null) {
 			modelo.addAttribute("mensaje", "Usuario o password incorrecto");
 			return "index";
 		} else {
-			// flash.addFlashAttribute("user", user);
+			try {
+				MessageDigest md = MessageDigest.getInstance("SHA-256");
+				byte[] hashedPasswordBytes = md.digest(obj.getPassword().getBytes(StandardCharsets.UTF_8));
+				String hashedPassword = toHexString(hashedPasswordBytes);
+				if (!user.getPassword().equals(hashedPassword)) {
+					modelo.addAttribute("mensaje", "Usuario o password incorrecto");
+					return "index";
+				}
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+				return "index";
+			}
 			session.setAttribute("user", user);
 			return "redirect:/cita";
 		}
@@ -62,6 +77,7 @@ public class UserController {
 	@GetMapping("/user")
 	public String user(Model modelo) {
 		modelo.addAttribute("users", dao.listar(""));
+		modelo.addAttribute("total", dao.total());
 		return "User/index";
 	}
 
@@ -84,12 +100,20 @@ public class UserController {
 
 			obj.setFoto("public/imgUser/" + imagen.getOriginalFilename());
 
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] hashedPasswordBytes = md.digest(obj.getPassword().getBytes(StandardCharsets.UTF_8));
+			String hashedPassword = toHexString(hashedPasswordBytes);
+			obj.setPassword(hashedPassword);
+
 			if (dao.insertar(obj)) {
 				return "redirect:/user";
 			} else {
 				return "redirect:/createUser";
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+			return "redirect:/createUser";
+		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return "redirect:/createUser";
 		}
@@ -138,5 +162,14 @@ public class UserController {
 		} else {
 			return "redirect:/user";
 		}
+	}
+
+	private static String toHexString(byte[] hash) {
+		BigInteger number = new BigInteger(1, hash);
+		StringBuilder hexString = new StringBuilder(number.toString(16));
+		while (hexString.length() < 32) {
+			hexString.insert(0, '0');
+		}
+		return hexString.toString();
 	}
 }

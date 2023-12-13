@@ -46,8 +46,8 @@ public class DaoCliente implements InterfaceCrud<Cliente> {
 
 	@Override
 	public int total() {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql = "select count(*) from cliente";
+		return jt.queryForObject(sql, Integer.class);
 	}
 
 	@Override

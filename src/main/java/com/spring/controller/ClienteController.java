@@ -22,6 +22,7 @@ public class ClienteController {
     public String Cliente(Model modelo) {
         List<Cliente> lista = dao.listar("");
         modelo.addAttribute("clientes", lista);
+        modelo.addAttribute("total", dao.total());
         return "Cliente/index";
     }
 

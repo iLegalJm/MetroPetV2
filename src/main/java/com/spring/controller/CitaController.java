@@ -56,11 +56,8 @@ public class CitaController {
     public String admin(Model modelo) {
         List<Cita> lista = dao.listar("");
         modelo.addAttribute("citas", lista);
+        modelo.addAttribute("total", dao.total());
 
-        if (modelo.containsAttribute("user")) {
-            User user = (User) modelo.getAttribute("user");
-            // Haz algo con userNombre...
-        }
         return "admin";
     }
 
@@ -86,7 +83,7 @@ public class CitaController {
     }
 
     @GetMapping("/editCita/{id}")
-    public String editCita(Model modelo,@PathVariable int id) {
+    public String editCita(Model modelo, @PathVariable int id) {
         Cita cita = dao.buscar(id);
         modelo.addAttribute("cita", cita);
 

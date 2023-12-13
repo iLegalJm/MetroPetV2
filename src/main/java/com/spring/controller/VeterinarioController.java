@@ -23,6 +23,7 @@ public class VeterinarioController {
     public String veterinario(Model modelo) {
         List<Veterinario> lista = dao.listar("");
         modelo.addAttribute("veterinarios", lista);
+        modelo.addAttribute("total", dao.total());
         return "Veterinario/index";
     }
 

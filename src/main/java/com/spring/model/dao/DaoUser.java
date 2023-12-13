@@ -51,8 +51,8 @@ public class DaoUser implements InterfaceCrud<User> {
 
 	@Override
 	public int total() {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql = "select count(*) from user";
+		return jt.queryForObject(sql, Integer.class);
 	}
 
 	@Override
@@ -61,11 +61,11 @@ public class DaoUser implements InterfaceCrud<User> {
 		return false;
 	}
 
-	public User login(String usuario, String password) {
+	public User login(String usuario) {
 		try {
-			String sql = "select usuario, nombre, apellidos, foto, fecha_registro from user where usuario = ? and password = ?";
+			String sql = "select usuario, password, nombre, apellidos, foto, fecha_registro from user where usuario = ?";
 			@SuppressWarnings("deprecation")
-			User user = jt.queryForObject(sql, new Object[] { usuario, password },
+			User user = jt.queryForObject(sql, new Object[] { usuario },
 					new BeanPropertyRowMapper<User>(User.class));
 			return user;
 		} catch (Exception e) {

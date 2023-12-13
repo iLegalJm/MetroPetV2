@@ -47,8 +47,8 @@ public class DaoVeterinario implements InterfaceCrud<Veterinario> {
 
 	@Override
 	public int total() {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql = "select count(*) from veterinario";
+		return jt.queryForObject(sql, Integer.class);
 	}
 
 	@Override

@@ -27,6 +27,7 @@ public class MascotaController {
     public String Mascota(Model modelo) {
         List<Mascota> lista = dao.listar("");
         modelo.addAttribute("mascotas", lista);
+        modelo.addAttribute("total", dao.total());
         return "Mascota/index";
     }
 

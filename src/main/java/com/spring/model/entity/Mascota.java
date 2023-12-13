@@ -1,6 +1,6 @@
 package com.spring.model.entity;
 
-public class Mascota {
+public class Mascota {	
 	private int id;
 	private String nombre;
 	private String raza;

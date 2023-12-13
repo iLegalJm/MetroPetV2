@@ -47,8 +47,8 @@ public class DaoMascota implements InterfaceCrud<Mascota> {
 
 	@Override
 	public int total() {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql = "select count(*) from mascota";
+		return jt.queryForObject(sql, Integer.class);
 	}
 
 	@Override
