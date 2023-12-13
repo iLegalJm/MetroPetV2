@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/layout}">
+    <head th:replace="layout/layout :: head">
+        <meta charset="UTF-8" />
+        <title>Inicio</title>
+    </head>
+    <body>
+        <div class="container-fluid" layout:fragment="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Usuarios</h3>
+                    <div class="row">
+                        <div class="ml-auto">
+                            <a th:href="@{/createUser}" class="btn btn-primary">Registrar
+                                usuario</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <table
+                        class="table table-dark table-striped table-bordered table">
+                        <thead class>
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Nombre</th>
+                                <th>Apellidos</th>
+                                <th>Foto</th>
+                                <th>F. Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user:${users}">
+                                <td th:text="${user.id}"></td>
+                                <td th:text="${user.usuario}"></td>
+                                <td th:text="${user.nombre}"></td>
+                                <td th:text="${user.apellidos}"></td>
+                                <td class="d-flex justify-content-center">
+                                    <img
+                                        class="rounded-circle"
+                                        th:src="@{${user.foto}}"
+                                        width="50px"
+                                        height="50px"
+                                        alt="Foto" />
+                                </td>
+                                <td th:text="${user.fecha_registro}"></td>
+                                <td>
+                                    <a
+                                        th:href="@{/editUser/{id}(id=${user.id})}"
+                                        type="button"
+                                        class="btn btn-primary btn-editar"
+                                        data-bs-whatever="${user.id}">
+                                        Editar
+                                    </a>
+                                    <a
+                                        th:href="@{/deleteUser/{id}(id=${user.id})}"
+                                        type="button"
+                                        class="btn btn-danger btn-eliminar">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

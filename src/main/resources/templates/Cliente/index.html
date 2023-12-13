@@ -1,49 +1,94 @@
 <!DOCTYPE html>
 <html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/layout}"
->
-  <head th:replace="layout/layout :: head">
-    <meta charset="UTF-8" />
-    <title>Inicio</title>
-  </head>
-  <body>
-    <div class="container-fluid" layout:fragment="page-content">
-      <div class="card">
-        <div class="card-header">
-          <h2>Listado de clientes</h2>
-          <a th:href="@{/createCliente}" class="btn btn-primary"
-            >Registrar cliente</a
-          >
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/layout}">
+    <head th:replace="layout/layout :: head">
+        <meta charset="UTF-8" />
+        <title>Inicio</title>
+    </head>
+    <body>
+        <div class="container-fluid" layout:fragment="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Clientes</h3>
+                    <div class="row">
+                        <div class="ml-auto">
+                            <a th:href="@{/createCliente}"
+                                class="btn btn-primary">Registrar
+                                cliente</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table
+                        class="table table-dark table-striped table-bordered table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombres</th>
+                                <th>Apellidos</th>
+                                <th>Dni</th>
+                                <th>Telefono</th>
+                                <th>Direccion</th>
+                                <th>F. Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="cliente:${clientes}">
+                                <td th:text="${cliente.id}"></td>
+                                <td th:text="${cliente.nombres}"></td>
+                                <td th:text="${cliente.apellidos}"></td>
+                                <td th:text="${cliente.dni}"></td>
+                                <td th:text="${cliente.telefono}"></td>
+                                <td th:text="${cliente.direccion}"></td>
+                                <td th:text="${cliente.fecha_registro}"></td>
+                                <td>
+                                    <a
+                                        th:href="@{/editCliente/{id}(id=${cliente.id})}"
+                                        type="button"
+                                        class="btn btn-primary btn-editar">
+                                        Editar
+                                    </a>
+                                    <a
+                                        th:href="@{/deleteCliente/{id}(id=${cliente.id})}"
+                                        type="button"
+                                        class="btn btn-danger btn-eliminar">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-          <table class="table table-dark table-striped-columns">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Dni</th>
-                <th>Telefono</th>
-                <th>Direccion</th>
-                <th>F. Registro</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="cliente:${clientes}">
-                <td th:text="${cliente.id}"></td>
-                <td th:text="${cliente.nombres}"></td>
-                <td th:text="${cliente.apellidos}"></td>
-                <td th:text="${cliente.dni}"></td>
-                <td th:text="${cliente.telefono}"></td>
-                <td th:text="${cliente.direccion}"></td>
-                <td th:text="${cliente.fecha_registro}"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </body>
+
+        <th:block layout:fragment="page-scripts">
+            <script>
+                $(document).ready(function () {
+                    document.querySelectorAll(".btn-eliminar").forEach((boton) => {
+                        boton.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            Swal.fire({
+                                title: "¿Estás seguro?",
+                                text: "No podrás revertir este cambio!",
+                                icon: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Sí, eliminar!",
+                                cancelButtonText: "Cancelar",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = boton.getAttribute("href");
+                                }
+                            });
+                        });
+                    });
+                });
+            </script>
+        </th:block>
+    </body>
 </html>

@@ -2,6 +2,7 @@ package com.spring.model.dao;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -42,8 +43,19 @@ public class DaoCita implements InterfaceCrud<Cita> {
 
 	@Override
 	public boolean actualizar(Cita obj) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+			String sql = "update cita set fecha = ?, hora = ?, mascota_id = ?, veterinario_id = ? where id = ?";
+			return jt.update(sql, formatter.format(obj.getFecha()), obj.getHora(),
+					obj.getMascota_id(),
+					obj.getVeterinario_id(), obj.getId()) == 1
+							? true
+							: false;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
 	}
 
 	@Override
@@ -56,6 +68,34 @@ public class DaoCita implements InterfaceCrud<Cita> {
 	public boolean existe(String texto) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Cita buscar(int id) {
+		String sql = "select c.*, m.nombre as mascota_nombre, v.nombres as veterinario_nombre, cl.nombres as cliente_nombre from cita c inner join mascota m on c.mascota_id = m.id inner join veterinario v on c.veterinario_id = v.id inner join cliente cl on m.cliente_id = cl.id where c.id = ?";
+		try {
+			return jt.queryForObject(sql, new BeanPropertyRowMapper<Cita>(Cita.class), id);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	@Override
+	public boolean eliminar(int id) {
+		// haz el metodo eliminar
+		String sql = "delete from cita where id = ?";
+		try {
+			return jt.update(sql, id) == 1 ? true : false;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+
+	public Optional<Cita> findById(int id) {
+		String sql = "select c.*, m.nombre as mascota_nombre, v.nombres as veterinario_nombre, cl.nombres as cliente_nombre from cita c inner join mascota m on c.mascota_id = m.id inner join veterinario v on c.veterinario_id = v.id inner join cliente cl on m.cliente_id = cl.id where c.id = ?";
+		return Optional.ofNullable(jt.queryForObject(sql, new BeanPropertyRowMapper<Cita>(Cita.class), id));
 	}
 
 }

@@ -1,43 +1,94 @@
 <!DOCTYPE html>
 <html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/layout}"
->
-  <head th:replace="layout/layout :: head">
-    <meta charset="UTF-8" />
-    <title>Inicio</title>
-  </head>
-  <body>
-    <div class="container-fluid" layout:fragment="page-content">
-      <div class="card">
-        <div class="card-header">
-          <h2>Listado de Veterinarios</h2>
-          <a th:href="@{/createVeterinario}" class="btn btn-primary"
-            >Registrar Veterinario</a
-          >
-        </div>
-        <div class="card-body">
-          <table class="table table-dark table-striped-columns">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Telefono</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="veterinario:${veterinarios}">
-                <td th:text="${veterinario.id}"></td>
-                <td th:text="${veterinario.nombres}"></td>
-                <td th:text="${veterinario.apellidos}"></td>
-                <td th:text="${veterinario.telefono}"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </body>
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+	<head th:replace="layout/layout :: head">
+		<meta charset="UTF-8" />
+		<title>Inicio</title>
+	</head>
+	<body>
+		<div class="container-fluid" layout:fragment="page-content">
+			<div class="card">
+				<div class="card-header">
+					<h3 class="card-title">Veterinarios</h3>
+					<div class="row">
+						<div class="ml-auto">
+							<a th:href="@{/createVeterinario}" class="btn btn-primary">Registrar
+								Veterinario</a>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<table class="table table-dark table-striped table-bordered table">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Nombre</th>
+								<th>Apellido</th>
+								<th>Telefono</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="veterinario:${veterinarios}">
+								<td th:text="${veterinario.id}"></td>
+								<td th:text="${veterinario.nombres}"></td>
+								<td th:text="${veterinario.apellidos}"></td>
+								<td th:text="${veterinario.telefono}"></td>
+								<td>
+									<a
+										th:href="@{/editVeterinario/{id}(id=${veterinario.id})}"
+										type="button"
+										class="btn btn-primary btn-editar"
+										data-bs-whatever="${veterinario.id}">
+										Editar
+									</a>
+									<a
+										th:href="@{/deleteVeterinario/{id}(id=${veterinario.id})}"
+										type="button"
+										class="btn btn-danger btn-eliminar">
+										Eliminar
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<th:block layout:fragment="page-scripts">
+			<script>
+        $(document).ready(function () {
+          document.querySelectorAll(".btn-eliminar").forEach((boton) => {
+            boton.addEventListener("click", function (ev) {
+              ev.preventDefault();
+              let href = this.getAttribute("href");
+              Swal.fire({
+                title: "¿Estás seguro?",
+                text: "No podrás recuperar este registro!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Si, eliminar!",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  Swal.fire({
+                    title: "Eliminado!",
+                    text: "El veterinario ha sido eliminado.",
+                    icon: "success",
+                    timer: 2000,
+                  }).then(() => {
+                    window.location.href = href; // Aquí rediriges a la ruta
+                  });
+                }
+              });
+            });
+          });
+        });
+      </script>
+		</th:block>
+	</body>
 </html>

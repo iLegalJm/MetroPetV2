@@ -36,8 +36,13 @@ public class DaoMascota implements InterfaceCrud<Mascota> {
 
 	@Override
 	public boolean actualizar(Mascota obj) {
-		// TODO Auto-generated method stub
-		return false;
+		String sql = "update mascota set nombre = ?, raza = ?, edad = ?, peso = ?, cliente_id = ? where id = ?";
+		try {
+			return jt.update(sql, obj.getNombre(), obj.getRaza(), obj.getEdad(), obj.getPeso(),
+					obj.getCliente_id(), obj.getId()) == 1 ? true : false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -50,6 +55,22 @@ public class DaoMascota implements InterfaceCrud<Mascota> {
 	public boolean existe(String texto) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Mascota buscar(int id) {
+		String sql = "select m.*, c.nombres as cliente_nombre, c.apellidos as cliente_apellidos from mascota m inner join cliente c on m.cliente_id = c.id where m.id = ?";
+		return jt.queryForObject(sql, new BeanPropertyRowMapper<Mascota>(Mascota.class), id);
+	}
+
+	@Override
+	public boolean eliminar(int id) {
+		String sql = "delete from mascota where id = ?";
+		try {
+			return jt.update(sql, id) == 1 ? true : false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

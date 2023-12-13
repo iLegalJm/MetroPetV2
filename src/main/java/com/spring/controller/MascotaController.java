@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.spring.model.dao.DaoCliente;
@@ -43,6 +44,34 @@ public class MascotaController {
             return "redirect:/mascota";
         } else {
             return "redirect:/createMascota";
+        }
+    }
+
+    @GetMapping("/editMascota/{id}")
+    public String editMascota(@PathVariable int id, Model modelo) {
+        Mascota mascota = dao.buscar(id);
+        modelo.addAttribute("mascota", mascota);
+        List<Cliente> listaClientes = daoCliente.listar("");
+        modelo.addAttribute("clientes", listaClientes);
+        return "Mascota/edit";
+    }
+
+    @PostMapping("/updateMascota/{id}")
+    public String updateMascota(@PathVariable int id, Mascota obj) {
+        obj.setId(id);
+        if (dao.actualizar(obj)) {
+            return "redirect:/mascota";
+        } else {
+            return "redirect:/editMascota/" + id;
+        }
+    }
+
+    @GetMapping("/deleteMascota/{id}")
+    public String deleteMascota(@PathVariable int id) {
+        if (dao.eliminar(id)) {
+            return "redirect:/mascota";
+        } else {
+            return "redirect:/mascota";
         }
     }
 }

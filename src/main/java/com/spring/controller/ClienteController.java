@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.spring.model.dao.DaoCliente;
@@ -36,6 +37,31 @@ public class ClienteController {
             return "redirect:/cliente";
         } else {
             return "redirect:/createCliente";
+        }
+    }
+
+    @GetMapping("/editCliente/{id}")
+    public String editCliente(@PathVariable int id, Model modelo) {
+        Cliente cliente = dao.buscar(id);
+        modelo.addAttribute("cliente", cliente);
+        return "Cliente/edit";
+    }
+
+    @PostMapping("/updateCliente/{id}")
+    public String updateCliente(@PathVariable int id, Cliente obj) {
+        if (dao.actualizar(obj)) {
+            return "redirect:/cliente";
+        } else {
+            return "redirect:/editCliente/" + id;
+        }
+    }
+
+    @GetMapping("/deleteCliente/{id}")
+    public String deleteCliente(@PathVariable int id) {
+        if (dao.eliminar(id)) {
+            return "redirect:/cliente";
+        } else {
+            return "redirect:/cliente";
         }
     }
 }

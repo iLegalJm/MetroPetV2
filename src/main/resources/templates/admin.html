@@ -1,52 +1,102 @@
 <!DOCTYPE html>
 <html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/layout}"
->
-  <head th:replace="layout/layout :: head">
-    <meta charset="UTF-8" />
-    <title>Inicio</title>
-  </head>
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/layout}">
+    <head th:replace="layout/layout :: head">
+        <meta charset="UTF-8" />
+        <title>Inicio</title>
+    </head>
 
-  <body>
-    <div class="container-fluid" layout:fragment="page-content">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Citas</h3>
-          <div class="row">
-            <div class="ml-auto">
-              <a th:href="@{/createCita}" class="btn btn-primary"
-                >Registrar cita</a
-              >
+    <body>
+        <div class="container-fluid" layout:fragment="page-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Citas</h3>
+                    <div class="row">
+                        <div class="ml-auto">
+                            <a th:href="@{/createCita}" class="btn btn-primary">Registrar
+                                cita</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table
+                        class="table table-dark table-striped table-bordered table"
+                        style="white-space: nowrap; overflow-x: auto;">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Mascota</th>
+                                <th>Dueño</th>
+                                <th>Vet.</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="cita:${citas}">
+                                <td th:text="${cita.id}"></td>
+                                <td th:text="${cita.fecha}"></td>
+                                <td th:text="${cita.hora}"></td>
+                                <td th:text="${cita.mascota_nombre}"></td>
+                                <td th:text="${cita.cliente_nombre}"></td>
+                                <td th:text="${cita.veterinario_nombre}"></td>
+                                <td>
+                                    <a
+                                        th:href="@{/editCita/{id}(id=${cita.id})}"
+                                        type="button"
+                                        class="btn btn-primary btn-editar">
+                                        Editar
+                                    </a>
+                                    <a
+                                        th:href="@{/reporteCita/{id}(id=${cita.id})}"
+                                        type="button" class="btn btn-success">Reporte</a>
+                                    <a
+                                        th:href="@{/deleteCita/{id}(id=${cita.id})}"
+                                        type="button"
+                                        class="btn btn-danger btn-eliminar">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="card-body">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Mascota</th>
-                <th>Dueño</th>
-                <th>Vet.</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="cita:${citas}">
-                <td th:text="${cita.id}"></td>
-                <td th:text="${cita.fecha}"></td>
-                <td th:text="${cita.hora}"></td>
-                <td th:text="${cita.mascota_nombre}"></td>
-                <td th:text="${cita.cliente_nombre}"></td>
-                <td th:text="${cita.veterinario_nombre}"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </body>
+    </body>
+
+    <th:block layout:fragment="page-scripts">
+        <script>
+      $(document).ready(function () {
+        document.querySelectorAll(".btn-eliminar").forEach((boton) => {
+          boton.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            Swal.fire({
+              title: "¿Estás seguro?",
+              text: "No podrás revertir esto!",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Si, eliminar!",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                Swal.fire({
+                  title: "Eliminado!",
+                  text: "El veterinario ha sido eliminado.",
+                  icon: "success",
+                  timer: 2000,
+                }).then(() => {
+                  window.location.href = boton.getAttribute("href"); // Aquí rediriges a la ruta
+                });
+              }
+            });
+          });
+        });
+      });
+    </script>
+    </th:block>
 </html>

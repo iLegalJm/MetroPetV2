@@ -36,8 +36,13 @@ public class DaoVeterinario implements InterfaceCrud<Veterinario> {
 
 	@Override
 	public boolean actualizar(Veterinario obj) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			String sql = "update veterinario set nombres=?,apellidos=?,telefono=? where id=?";
+			return jt.update(sql, obj.getNombres(), obj.getApellidos(),
+					obj.getTelefono(), obj.getId()) == 1 ? true : false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -50,6 +55,23 @@ public class DaoVeterinario implements InterfaceCrud<Veterinario> {
 	public boolean existe(String texto) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Veterinario buscar(int id) {
+		String sql = "select * from veterinario where id = ?";
+		return jt.queryForObject(sql, new Object[] { id },
+				BeanPropertyRowMapper.newInstance(Veterinario.class));
+	}
+
+	@Override
+	public boolean eliminar(int id) {
+		String sql = "delete from veterinario where id = ?";
+		try {
+			return jt.update(sql, id) == 1 ? true : false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

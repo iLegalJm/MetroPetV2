@@ -35,8 +35,13 @@ public class DaoCliente implements InterfaceCrud<Cliente> {
 
 	@Override
 	public boolean actualizar(Cliente obj) {
-		// TODO Auto-generated method stub
-		return false;
+		String sql = "update cliente set nombres = ?, apellidos = ?, dni = ?, telefono = ?, direccion = ? where id = ?";
+		try {
+			return jt.update(sql, obj.getNombres(), obj.getApellidos(), obj.getDni(), obj.getTelefono(),
+					obj.getDireccion(), obj.getId()) == 1 ? true : false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -49,6 +54,22 @@ public class DaoCliente implements InterfaceCrud<Cliente> {
 	public boolean existe(String texto) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Cliente buscar(int id) {
+		String sql = "select * from cliente where id = ?";
+		return jt.queryForObject(sql, new BeanPropertyRowMapper<Cliente>(Cliente.class), id);
+	}
+
+	@Override
+	public boolean eliminar(int id) {
+		String sql = "delete from cliente where id = ?";
+		try {
+			return jt.update(sql, id) == 1 ? true : false;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }
